@@ -2,13 +2,28 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>Opening…</title>
+  <title>Redirecting…</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      text-align: center;
+      padding: 32px 16px;
+      color: #111;
+    }
+    .note {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
 
   <script>
     (function () {
       var TARGET_URL = "https://uat.cypher.global/s/2cqJPTytrd";
-      var intentUsed = false;
+      var ANDROID_INTENT =
+        "intent://uat.cypher.global/s/2cqJPTytrd#Intent;scheme=https;end";
 
       function isMobile() {
         return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -30,35 +45,32 @@
 
       if (!isMobile()) return;
 
+      // ✅ AUTO xử lý khi load
       window.onload = function () {
-        // ✅ iOS → Safari
-        if (isiOS() && isSocialWebView()) {
-          window.location.href =
-            "com-apple-mobilesafari-tab:" + TARGET_URL;
-          return;
-        }
-
-        // ✅ Android → Intent
+        // ✅ ANDROID: AUTO mở browser mặc định (thoát social app)
         if (isAndroid() && isSocialWebView()) {
-          intentUsed = true;
-          window.location.href =
-            "intent://uat.cypher.global/s/2cqJPTytrd" +
-            "#Intent;scheme=https;end";
+          window.location.href = ANDROID_INTENT;
           return;
         }
 
-        // ✅ browser thường
+        // ⚠️ iOS: AUTO redirect sang Safari system tab bị iOS BLOCK
+        // KHÔNG gọi com-apple-mobilesafari-tab ở đây để tránh lỗi
+        if (isiOS() && isSocialWebView()) {
+          // Giữ trang ổn định, không crash
+          return;
+        }
+
+        // ✅ Browser thường / không phải social
         window.location.href = TARGET_URL;
       };
 
-      // ✅ XỬ LÝ KHI USER GO BACK TỪ EXTERNAL BROWSER
+      // ✅ Android Go‑Back handling (nếu user quay lại WebView)
       document.addEventListener("visibilitychange", function () {
         if (
           document.visibilityState === "visible" &&
-          intentUsed &&
-          isAndroid()
+          isAndroid() &&
+          isSocialWebView()
         ) {
-          // Fallback: mở browser thường
           window.location.href = TARGET_URL;
         }
       });
@@ -67,5 +79,11 @@
 </head>
 
 <body>
+  <h3>Đang mở liên kết…</h3>
+
+  <p class="note">
+    • Android: tự động mở bằng trình duyệt mặc định<br />
+    • iOS: do giới hạn bảo mật của hệ điều hành, không thể tự động thoát app social
+  </p>
 </body>
 </html>
