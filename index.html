@@ -3,57 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Redirecting…</title>
+  <title>Open content</title>
   <style>
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; padding: 16px; }
     .box { max-width: 520px; margin: 40px auto; border: 1px solid #eee; border-radius: 12px; padding: 16px; }
-    button { padding: 10px 14px; border-radius: 10px; border: 1px solid #ddd; background: #fff; cursor: pointer; }
-    a { color: #2563eb; word-break: break-all; }
+    button, a.btn {
+      display: inline-block;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      background: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      margin-top: 12px;
+    }
     .muted { color: #666; margin-top: 8px; font-size: 14px; }
+    a { word-break: break-all; color:#2563eb; }
   </style>
 </head>
 <body>
   <div class="box">
-    <h3>Đang mở nội dung…</h3>
-    <div class="muted">Nếu không tự động mở, hãy bấm nút bên dưới.</div>
+    <h3>Không mở được tự động?</h3>
+    <div class="muted">Trên iOS/Instagram có thể cần bấm tay.</div>
 
     <p class="muted">
       Link đích:
-      <a id="targetLink" href="https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5">
+      <a href="https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5" target="_self" rel="noreferrer">
         https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5
       </a>
     </p>
 
-    <button id="openBtn">Mở nội dung trong trình duyệt</button>
+    <a class="btn" id="openBtn"
+       href="https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5"
+       target="_self" rel="noreferrer">
+      Mở nội dung (Mở bằng trình duyệt)
+    </a>
   </div>
 
   <script>
-    (function () {
-      const targetUrl = "https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5";
-      const openBtn = document.getElementById("openBtn");
-      const targetLink = document.getElementById("targetLink");
-
-      targetLink.href = targetUrl;
-
-      openBtn.addEventListener("click", function () {
-        // Cách 1: cố mở tab/window mới
-        // (Nếu đang trong in-app webview thì có thể vẫn mở cùng webview)
-        window.open(targetUrl, "_blank", "noopener,noreferrer");
-
-        // Cách 2 (fallback): đổi location của trang hiện tại
-        // -> gần như chắc chắn đưa người dùng tới trang đích.
-        setTimeout(() => {
-          window.location.href = targetUrl;
-        }, 300);
-      });
-
-      // Tự động chuyển sau 300ms (fallback)
-      setTimeout(() => {
-        // Tránh mở quá sớm trong một số môi trường bị chặn; nhưng ta vẫn làm fallback.
-        window.location.replace(targetUrl);
-      }, 300);
-    })();
   </script>
 </body>
 </html>
-
