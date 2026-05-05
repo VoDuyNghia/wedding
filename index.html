@@ -1,18 +1,58 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Redirecting...</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Opening link…</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <script>
-    window.onload = function () {
-      window.location.href =
-        "com-apple-mobilesafari-tab:https://uat.cypher.global/s/2cqJPTytrd";
-    };
+    (function () {
+      var TARGET_URL = "https://uat.cypher.global/s/2cqJPTytrd";
+
+      function isMobile() {
+        return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+      }
+
+      function isiOS() {
+        return /iphone|ipad|ipod/i.test(navigator.userAgent);
+      }
+
+      function isAndroid() {
+        return /android/i.test(navigator.userAgent);
+      }
+
+      // Các social in-app browser
+      function isSocialWebView() {
+        return /(FBAN|FBAV|Instagram|TikTok|Twitter)/i.test(
+          navigator.userAgent
+        );
+      }
+
+      if (!isMobile()) return;
+
+      window.onload = function () {
+        // ✅ iOS: ép mở Safari mặc định
+        if (isiOS() && isSocialWebView()) {
+          window.location.href =
+            "com-apple-mobilesafari-tab:" + TARGET_URL;
+          return;
+        }
+
+        // ✅ Android: ép mở browser mặc định
+        if (isAndroid() && isSocialWebView()) {
+          window.location.href =
+            "intent://uat.cypher.global/s/2cqJPTytrd" +
+            "#Intent;scheme=https;end";
+          return;
+        }
+
+        // ✅ Trường hợp khác (browser thường)
+        window.location.href = TARGET_URL;
+      };
+    })();
   </script>
 </head>
+
 <body>
-  <p>Đang chuyển hướng…</p>
 </body>
 </html>
