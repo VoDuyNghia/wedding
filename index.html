@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>Redirecting…</title>
+  <title>Open External Browser</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -12,11 +12,10 @@
       background: #f5f5f5;
     }
 
-    /* Overlay chỉ dùng cho iOS */
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0,0,0,0.55);
       display: none;
       align-items: center;
       justify-content: center;
@@ -30,11 +29,11 @@
       border-radius: 14px;
       padding: 24px 20px;
       text-align: center;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
     }
 
     .popup h3 {
-      margin: 0 0 10px;
+      margin-bottom: 8px;
       font-size: 18px;
     }
 
@@ -44,19 +43,17 @@
       margin-bottom: 18px;
     }
 
-    .popup button {
+    .btn {
+      display: block;
       width: 100%;
       padding: 14px;
-      border: none;
+      text-align: center;
       border-radius: 10px;
       background: #007aff;
       color: #fff;
       font-size: 16px;
       font-weight: 600;
-    }
-
-    .popup button:active {
-      background: #0060d1;
+      text-decoration: none;
     }
   </style>
 
@@ -81,41 +78,43 @@
       }
 
       window.onload = function () {
-        // ✅ ANDROID: auto redirect → browser mặc định
+
+        // ✅ ANDROID → AUTO OPEN EXTERNAL BROWSER
         if (isAndroid() && isSocialWebView()) {
           window.location.href = ANDROID_INTENT;
           return;
         }
 
-        // ✅ IOS: CHỈ HIỆN POPUP (KHÔNG auto)
+        // ✅ iOS → SHOW POPUP (REQUIRED)
         if (isiOS() && isSocialWebView()) {
           document.getElementById("overlay").style.display = "flex";
           return;
         }
 
-        // ✅ Browser thường / không phải social
+        // ✅ Normal browser
         window.location.href = TARGET_URL;
-      };
-
-      // ✅ iOS user click → mở Safari
-      window.openExternal = function () {
-        window.location.href =
-          "com-apple-mobilesafari-tab:" + TARGET_URL;
       };
     })();
   </script>
 </head>
 
 <body>
-  <!-- Popup chỉ cho iOS -->
+
+  <!-- ✅ iOS POPUP -->
   <div id="overlay" class="overlay">
     <div class="popup">
       <h3>Mở bằng trình duyệt</h3>
-      <p>
-        Để tiếp tục, vui lòng mở link bằng trình duyệt mặc định của iPhone.
-      </p>
-      <button onclick="openExternal()">Mở ngay</button>
+      <p>Nhấn nút bên dưới để mở link bằng Safari.</p>
+
+      <!-- ✅ BẮT BUỘC: <a href>, KHÔNG DÙNG JS -->
+      <a
+        class="btn"
+        href="com-apple-mobilesafari-tab:https://uat.cypher.global/s/2cqJPTytrd"
+      >
+        Mở ngay
+      </a>
     </div>
   </div>
+
 </body>
 </html>
