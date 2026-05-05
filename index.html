@@ -1,70 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Open content</title>
+  <meta charset="UTF-8" />
+  <title>Opening link…</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      padding: 16px;
-    }
+  <script>
+    (function () {
+      var TARGET_URL = "https://uat.cypher.global/s/2cqJPTytrd";
 
-    .box {
-      max-width: 520px;
-      margin: 40px auto;
-      border: 1px solid #eee;
-      border-radius: 12px;
-      padding: 16px;
-    }
+      function isMobile() {
+        return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+      }
 
-    a.btn {
-      display: inline-block;
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      background: #fff;
-      text-decoration: none;
-      margin-top: 12px;
-      color: #111;
-    }
+      function isiOS() {
+        return /iphone|ipad|ipod/i.test(navigator.userAgent);
+      }
 
-    .muted {
-      color: #666;
-      margin-top: 8px;
-      font-size: 14px;
-    }
-  </style>
+      function isAndroid() {
+        return /android/i.test(navigator.userAgent);
+      }
+
+      // Các social in-app browser
+      function isSocialWebView() {
+        return /(FBAN|FBAV|Instagram|TikTok|Twitter)/i.test(
+          navigator.userAgent
+        );
+      }
+
+      if (!isMobile()) return;
+
+      window.onload = function () {
+        // ✅ iOS: ép mở Safari mặc định
+        if (isiOS() && isSocialWebView()) {
+          window.location.href =
+            "com-apple-mobilesafari-tab:" + TARGET_URL;
+          return;
+        }
+
+        // ✅ Android: ép mở browser mặc định
+        if (isAndroid() && isSocialWebView()) {
+          window.location.href =
+            "intent://uat.cypher.global/s/2cqJPTytrd" +
+            "#Intent;scheme=https;end";
+          return;
+        }
+
+        // ✅ Trường hợp khác (browser thường)
+        window.location.href = TARGET_URL;
+      };
+    })();
+  </script>
 </head>
 
 <body>
-  <div class="box">
-    <h3>Không mở được tự động?</h3>
-    <div class="muted">
-      Trên iOS / Instagram, vui lòng bấm nút bên dưới để mở bằng trình duyệt Safari.
-    </div>
-
-    <!-- ✅ QUAN TRỌNG: com-apple-mobilesafari-tab -->
-    <a
-      class="btn"
-      href="safari-https:https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5"
-    >
-      Mở nội dung (Safari)
-    </a>
-
-
-    <a
-      class="btn"
-      href="safari:https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5"
-    >
-      Mở nội dung 2 (Safari)
-    </a>
-
-    <p class="muted">
-      Nếu không được, hãy dùng menu “Open in Safari”.
-    </p>
-  </div>
-  
 </body>
 </html>
