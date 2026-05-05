@@ -1,120 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <title>Open External Browser</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redirecting…</title>
   <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f5f5f5;
-    }
-
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-
-    .popup {
-      background: #fff;
-      width: 90%;
-      max-width: 340px;
-      border-radius: 14px;
-      padding: 24px 20px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    }
-
-    .popup h3 {
-      margin-bottom: 8px;
-      font-size: 18px;
-    }
-
-    .popup p {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 18px;
-    }
-
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      text-align: center;
-      border-radius: 10px;
-      background: #007aff;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 600;
-      text-decoration: none;
-    }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; padding: 16px; }
+    .box { max-width: 520px; margin: 40px auto; border: 1px solid #eee; border-radius: 12px; padding: 16px; }
+    button { padding: 10px 14px; border-radius: 10px; border: 1px solid #ddd; background: #fff; cursor: pointer; }
+    a { color: #2563eb; word-break: break-all; }
+    .muted { color: #666; margin-top: 8px; font-size: 14px; }
   </style>
+</head>
+<body>
+  <div class="box">
+    <h3>Đang mở nội dung…</h3>
+    <div class="muted">Nếu không tự động mở, hãy bấm nút bên dưới.</div>
+
+    <p class="muted">
+      Link đích:
+      <a id="targetLink" href="https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5">
+        https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5
+      </a>
+    </p>
+
+    <button id="openBtn">Mở nội dung trong trình duyệt</button>
+  </div>
 
   <script>
     (function () {
-      const TARGET_URL = "https://uat.cypher.global/s/2cqJPTytrd";
-      const ANDROID_INTENT =
-        "intent://uat.cypher.global/s/2cqJPTytrd#Intent;scheme=https;end";
+      const targetUrl = "https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5";
+      const openBtn = document.getElementById("openBtn");
+      const targetLink = document.getElementById("targetLink");
 
-      function isiOS() {
-        return /iphone|ipad|ipod/i.test(navigator.userAgent);
-      }
+      targetLink.href = targetUrl;
 
-      function isAndroid() {
-        return /android/i.test(navigator.userAgent);
-      }
+      openBtn.addEventListener("click", function () {
+        // Cách 1: cố mở tab/window mới
+        // (Nếu đang trong in-app webview thì có thể vẫn mở cùng webview)
+        window.open(targetUrl, "_blank", "noopener,noreferrer");
 
-      function isSocialWebView() {
-        return /(FBAN|FBAV|Instagram|TikTok|Twitter)/i.test(
-          navigator.userAgent
-        );
-      }
+        // Cách 2 (fallback): đổi location của trang hiện tại
+        // -> gần như chắc chắn đưa người dùng tới trang đích.
+        setTimeout(() => {
+          window.location.href = targetUrl;
+        }, 300);
+      });
 
-      window.onload = function () {
-
-        // ✅ ANDROID → AUTO OPEN EXTERNAL BROWSER
-        if (isAndroid() && isSocialWebView()) {
-          window.location.href = ANDROID_INTENT;
-          return;
-        }
-
-        // ✅ iOS → SHOW POPUP (REQUIRED)
-        if (isiOS() && isSocialWebView()) {
-          document.getElementById("overlay").style.display = "flex";
-          return;
-        }
-
-        // ✅ Normal browser
-        window.location.href = TARGET_URL;
-      };
+      // Tự động chuyển sau 300ms (fallback)
+      setTimeout(() => {
+        // Tránh mở quá sớm trong một số môi trường bị chặn; nhưng ta vẫn làm fallback.
+        window.location.replace(targetUrl);
+      }, 300);
     })();
   </script>
-</head>
-
-<body>
-
-  <!-- ✅ iOS POPUP -->
-  <div id="overlay" class="overlay">
-    <div class="popup">
-      <h3>Mở bằng trình duyệt</h3>
-      <p>Nhấn nút bên dưới để mở link bằng Safari.</p>
-
-      <!-- ✅ BẮT BUỘC: <a href>, KHÔNG DÙNG JS -->
-      <a
-        class="btn"
-        href="com-apple-mobilesafari-tab:https://uat.cypher.global/s/2cqJPTytrd"
-      >
-        Mở ngay
-      </a>
-    </div>
-  </div>
-
 </body>
 </html>
+
