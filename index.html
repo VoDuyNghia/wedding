@@ -1,58 +1,166 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <title>Opening link…</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Open External Platform</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, Arial;
+      background: #f4f4f5;
+      color: #111;
+    }
+
+    .page {
+      max-width: 520px;
+      margin: 40px auto;
+      padding: 24px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+
+    h2 { margin-top: 0; }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .popup {
+      width: 90%;
+      max-width: 340px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .popup h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .popup p {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    .btn {
+      display: block;
+      padding: 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .btn-primary {
+      background: #ee4d2d; /* Shopee style */
+      color: #fff;
+    }
+
+    .btn-secondary {
+      border: 1px solid #ddd;
+      color: #111;
+      background: #fff;
+    }
+
+    .note {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #666;
+    }
+  </style>
 
   <script>
-    (function () {
-      var TARGET_URL = "https://uat.cypher.global/s/2cqJPTytrd";
+    /************ CONFIG ************/
+    const TARGET_URL = "https://uat.cypher.global/s/2cqJPTytrd";
+    const ANDROID_INTENT =
+      "intent://uat.cypher.global/s/2cqJPTytrd#Intent;scheme=https;end";
 
-      function isMobile() {
-        return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    /************ HELPERS ************/
+    function isAndroid() {
+      return /android/i.test(navigator.userAgent);
+    }
+
+    function isiOS() {
+      return /iphone|ipad|ipod/i.test(navigator.userAgent);
+    }
+
+    function isInstagram() {
+      return /Instagram/i.test(navigator.userAgent);
+    }
+
+    /************ MAIN FLOW ************/
+    window.onload = function () {
+      // ✅ Android + Instagram -> AUTO mở external browser
+      if (isAndroid() && isInstagram()) {
+        window.location.href = ANDROID_INTENT;
+        return;
       }
 
-      function isiOS() {
-        return /iphone|ipad|ipod/i.test(navigator.userAgent);
+      // ✅ iOS + Instagram -> SHOW POPUP (fallback bắt buộc)
+      if (isiOS() && isInstagram()) {
+        document.getElementById("overlay").style.display = "flex";
+        return;
       }
 
-      function isAndroid() {
-        return /android/i.test(navigator.userAgent);
-      }
-
-      // Các social in-app browser
-      function isSocialWebView() {
-        return /(FBAN|FBAV|Instagram|TikTok|Twitter)/i.test(
-          navigator.userAgent
-        );
-      }
-
-      if (!isMobile()) return;
-
-      window.onload = function () {
-        // ✅ iOS: ép mở Safari mặc định
-        if (isiOS() && isSocialWebView()) {
-          window.location.href =
-            "com-apple-mobilesafari-tab:" + TARGET_URL;
-          return;
-        }
-
-        // ✅ Android: ép mở browser mặc định
-        if (isAndroid() && isSocialWebView()) {
-          window.location.href =
-            "intent://uat.cypher.global/s/2cqJPTytrd" +
-            "#Intent;scheme=https;end";
-          return;
-        }
-
-        // ✅ Trường hợp khác (browser thường)
-        window.location.href = TARGET_URL;
-      };
-    })();
+      // ✅ Trường hợp khác -> mở link bình thường
+      window.location.href = TARGET_URL;
+    };
   </script>
 </head>
 
 <body>
+
+  <div class="page">
+    <h2>Demo external platform</h2>
+    <p class="note">
+      Trang này mô phỏng flow chuẩn khi người dùng mở link từ Instagram.
+    </p>
+  </div>
+
+  <!-- ✅ POPUP KIỂU SHOPEE / LAZADA -->
+  <div id="overlay" class="overlay">
+    <div class="popup">
+      <h3>Mở bằng ứng dụng</h3>
+      <p>
+        Trải nghiệm tốt hơn khi mở bằng ứng dụng.<br>
+        Nếu bạn chưa cài app, liên kết sẽ mở trên Safari.
+      </p>
+
+      <!-- ✅ UNIVERSAL LINK
+           - Có app -> mở app
+           - Không có app -> Safari (fallback)
+           - IG không cho auto, user bấm là hợp lệ -->
+      <a href="https://uat.cypher.global/s/2cqJPTytrd"
+         class="btn btn-primary">
+        Mở ứng dụng
+      </a>
+
+      <!-- ✅ FALLBACK CHỦ ĐỘNG -->
+      <a href="https://uat.cypher.global/s/2cqJPTytrd"
+         class="btn btn-secondary">
+        Tiếp tục trên Safari
+      </a>
+
+      <div class="note">
+        Trên Instagram iOS, hệ thống yêu cầu thao tác tay để mở nền tảng ngoài.
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
