@@ -4,43 +4,58 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Open content</title>
+
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; padding: 16px; }
-    .box { max-width: 520px; margin: 40px auto; border: 1px solid #eee; border-radius: 12px; padding: 16px; }
-    button, a.btn {
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      padding: 16px;
+    }
+
+    .box {
+      max-width: 520px;
+      margin: 40px auto;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    a.btn {
       display: inline-block;
-      padding: 12px 14px;
+      padding: 12px 16px;
       border-radius: 10px;
       border: 1px solid #ddd;
       background: #fff;
-      cursor: pointer;
       text-decoration: none;
       margin-top: 12px;
+      color: #111;
     }
-    .muted { color: #666; margin-top: 8px; font-size: 14px; }
-    a { word-break: break-all; color:#2563eb; }
+
+    .muted {
+      color: #666;
+      margin-top: 8px;
+      font-size: 14px;
+    }
   </style>
 </head>
+
 <body>
   <div class="box">
     <h3>Không mở được tự động?</h3>
-    <div class="muted">Trên iOS/Instagram có thể cần bấm tay.</div>
+    <div class="muted">
+      Trên iOS / Instagram, vui lòng bấm nút bên dưới để mở bằng trình duyệt Safari.
+    </div>
+
+    <!-- ✅ QUAN TRỌNG: com-apple-mobilesafari-tab -->
+    <a
+      class="btn"
+      href="com-apple-mobilesafari-tab:https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5"
+    >
+      Mở nội dung (Safari)
+    </a>
 
     <p class="muted">
-      Link đích:
-      <a href="https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5" target="_self" rel="noreferrer">
-        https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5
-      </a>
+      Nếu không được, hãy dùng menu “Open in Safari”.
     </p>
-
-    <a class="btn" id="openBtn"
-       href="https://uat.cypher.global/shared-content/a19c1f6a-64ce-4c65-be97-af7f18bc6aa5"
-       target="_self" rel="noreferrer">
-      Mở nội dung (Mở bằng trình duyệt)
-    </a>
   </div>
-
-  <script>
-  </script>
 </body>
 </html>
