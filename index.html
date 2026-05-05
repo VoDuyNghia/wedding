@@ -7,27 +7,64 @@
 
   <style>
     body {
+      margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      text-align: center;
-      padding: 32px 16px;
-      color: #111;
+      background: #f5f5f5;
     }
-    .note {
-      margin-top: 20px;
+
+    /* Overlay chỉ dùng cho iOS */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .popup {
+      background: #fff;
+      width: 90%;
+      max-width: 340px;
+      border-radius: 14px;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .popup h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .popup p {
       font-size: 14px;
       color: #555;
+      margin-bottom: 18px;
+    }
+
+    .popup button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #007aff;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .popup button:active {
+      background: #0060d1;
     }
   </style>
 
   <script>
     (function () {
-      var TARGET_URL = "https://uat.cypher.global/s/2cqJPTytrd";
-      var ANDROID_INTENT =
+      const TARGET_URL = "https://uat.cypher.global/s/2cqJPTytrd";
+      const ANDROID_INTENT =
         "intent://uat.cypher.global/s/2cqJPTytrd#Intent;scheme=https;end";
-
-      function isMobile() {
-        return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
-      }
 
       function isiOS() {
         return /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -43,20 +80,16 @@
         );
       }
 
-      if (!isMobile()) return;
-
-      // ✅ AUTO xử lý khi load
       window.onload = function () {
-        // ✅ ANDROID: AUTO mở browser mặc định (thoát social app)
+        // ✅ ANDROID: auto redirect → browser mặc định
         if (isAndroid() && isSocialWebView()) {
           window.location.href = ANDROID_INTENT;
           return;
         }
 
-        // ⚠️ iOS: AUTO redirect sang Safari system tab bị iOS BLOCK
-        // KHÔNG gọi com-apple-mobilesafari-tab ở đây để tránh lỗi
+        // ✅ IOS: CHỈ HIỆN POPUP (KHÔNG auto)
         if (isiOS() && isSocialWebView()) {
-          // Giữ trang ổn định, không crash
+          document.getElementById("overlay").style.display = "flex";
           return;
         }
 
@@ -64,26 +97,25 @@
         window.location.href = TARGET_URL;
       };
 
-      // ✅ Android Go‑Back handling (nếu user quay lại WebView)
-      document.addEventListener("visibilitychange", function () {
-        if (
-          document.visibilityState === "visible" &&
-          isAndroid() &&
-          isSocialWebView()
-        ) {
-          window.location.href = TARGET_URL;
-        }
-      });
+      // ✅ iOS user click → mở Safari
+      window.openExternal = function () {
+        window.location.href =
+          "com-apple-mobilesafari-tab:" + TARGET_URL;
+      };
     })();
   </script>
 </head>
 
 <body>
-  <h3>Đang mở liên kết…</h3>
-
-  <p class="note">
-    • Android: tự động mở bằng trình duyệt mặc định<br />
-    • iOS: do giới hạn bảo mật của hệ điều hành, không thể tự động thoát app social
-  </p>
+  <!-- Popup chỉ cho iOS -->
+  <div id="overlay" class="overlay">
+    <div class="popup">
+      <h3>Mở bằng trình duyệt</h3>
+      <p>
+        Để tiếp tục, vui lòng mở link bằng trình duyệt mặc định của iPhone.
+      </p>
+      <button onclick="openExternal()">Mở ngay</button>
+    </div>
+  </div>
 </body>
 </html>
